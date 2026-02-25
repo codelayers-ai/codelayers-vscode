@@ -27,16 +27,8 @@ CodeLayers analyzes your codebase with [tree-sitter](https://tree-sitter.github.
 
 CodeLayers requires the `codelayers` CLI for parsing and graph analysis.
 
-**Homebrew (macOS/Linux):**
-
 ```bash
-brew install codelayers-ai/codelayers/codelayers
-```
-
-**Shell installer:**
-
-```bash
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/codelayers-ai/codelayers/releases/latest/download/codelayers-cli-installer.sh | sh
+curl -fsSL https://codelayers.ai/install.sh | bash
 ```
 
 The extension will prompt you to install the CLI if it's not found in your PATH.
