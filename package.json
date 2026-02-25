@@ -1,0 +1,208 @@
+{
+  "name": "codelayers",
+  "displayName": "CodeLayers — Blast Radius",
+  "description": "See the blast radius of your code changes. Powered by CodeLayers.",
+  "version": "0.1.1",
+  "publisher": "codelayers",
+  "license": "SEE LICENSE IN LICENSE",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codelayers-ai/codelayers-vscode"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codelayers",
+          "title": "CodeLayers",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codelayers": [
+        {
+          "id": "codelayers.blastRadius",
+          "name": "Blast Radius"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "id": "codelayers.hop0",
+        "defaults": {
+          "dark": "#FF3B30",
+          "light": "#D32F2F"
+        },
+        "description": "Blast radius: changed file (hop 0)"
+      },
+      {
+        "id": "codelayers.hop1",
+        "defaults": {
+          "dark": "#FF9500",
+          "light": "#E65100"
+        },
+        "description": "Blast radius: 1 hop away"
+      },
+      {
+        "id": "codelayers.hop2",
+        "defaults": {
+          "dark": "#FFCC00",
+          "light": "#F9A825"
+        },
+        "description": "Blast radius: 2 hops away"
+      },
+      {
+        "id": "codelayers.hop3",
+        "defaults": {
+          "dark": "#10B981",
+          "light": "#059669"
+        },
+        "description": "Blast radius: 3 hops away"
+      },
+      {
+        "id": "codelayers.hop4",
+        "defaults": {
+          "dark": "#5AC8FA",
+          "light": "#0288D1"
+        },
+        "description": "Blast radius: 4+ hops away"
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "codelayers.blastRadius",
+        "contents": "Watching for changes automatically.\n\nCLI not installed? Run in terminal:\n`brew install codelayers-ai/codelayers/codelayers`\n\nVisualize your codebase in 3D on Apple Vision Pro.\n[Learn more](https://codelayers.ai?ref=vscode)",
+        "when": "codelayers.showWelcome"
+      }
+    ],
+    "commands": [
+      {
+        "command": "codelayers.analyzeBlastRadius",
+        "title": "CodeLayers: Analyze Blast Radius"
+      },
+      {
+        "command": "codelayers.refresh",
+        "title": "CodeLayers: Refresh"
+      },
+      {
+        "command": "codelayers.openWithDiff",
+        "title": "CodeLayers: Open File with Diff"
+      },
+      {
+        "command": "codelayers.cycleFilter",
+        "title": "CodeLayers: Filter Dependencies",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "codelayers.goToSymbol",
+        "title": "CodeLayers: Go to Symbol"
+      },
+      {
+        "command": "codelayers.showCallers",
+        "title": "CodeLayers: Show Callers"
+      },
+      {
+        "command": "codelayers.traceDownstream",
+        "title": "CodeLayers: Trace Downstream"
+      },
+      {
+        "command": "codelayers.toggleDecorations",
+        "title": "CodeLayers: Toggle Blast Radius Decorations",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "codelayers.toggleEnabled",
+        "title": "CodeLayers: Toggle Blast Radius On/Off"
+      }
+    ],
+    "configuration": {
+      "title": "CodeLayers",
+      "properties": {
+        "codelayers.maxHops": {
+          "type": "integer",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maximum dependency chain depth to analyze. Hop 0 = changed file, hop 1 = direct callers, etc. Higher values show more transitive effects but increase noise in large codebases."
+        },
+        "codelayers.showCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline caller counts and upstream/downstream links above affected code."
+        },
+        "codelayers.defaultFilterMode": {
+          "type": "string",
+          "enum": [
+            "all",
+            "functions",
+            "imports"
+          ],
+          "enumDescriptions": [
+            "Show all dependency types (imports, calls, references)",
+            "Show only call/reference dependencies (most precise)",
+            "Show only import dependencies"
+          ],
+          "default": "all",
+          "description": "Default dependency filter mode on startup."
+        },
+        "codelayers.warningThreshold": {
+          "type": "integer",
+          "default": 20,
+          "minimum": 1,
+          "description": "Show status bar in warning color when this many or more files are in the blast radius."
+        },
+        "codelayers.cliPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Path to the codelayers CLI binary. Leave empty to auto-detect from PATH."
+        }
+      }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "codelayers.toggleDecorations",
+          "when": "view == codelayers.blastRadius",
+          "group": "navigation"
+        },
+        {
+          "command": "codelayers.cycleFilter",
+          "when": "view == codelayers.blastRadius",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "activationEvents": [
+    "workspaceContains:.git"
+  ],
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.0",
+    "@vscode/vsce": "^2.22.0",
+    "vitest": "^2.0.0"
+  }
+}
