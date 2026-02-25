@@ -64,6 +64,11 @@ All commands are available via the Command Palette (`Cmd+Shift+P`):
 - **CodeLayers: Trace Downstream** — List files that depend on a file
 - **CodeLayers: Go to Symbol** — Jump to a symbol definition
 
+## Links
+
+- **Website:** [codelayers.ai](https://codelayers.ai/)
+- **iOS App (Apple Vision Pro):** [CodeLayers on the App Store](https://apps.apple.com/app/codelayers/id6756067177)
+
 ## License
 
 See [LICENSE](LICENSE) for details.
