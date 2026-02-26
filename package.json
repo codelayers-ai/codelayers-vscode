@@ -2,7 +2,7 @@
   "name": "codelayers",
   "displayName": "CodeLayers — Blast Radius",
   "description": "Visualize the blast radius of every code change — see which files and functions are affected across your dependency graph, with color-coded hops, inline CodeLens, and 3D codebase visualization on Apple Vision Pro.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "codelayers",
   "license": "SEE LICENSE IN LICENSE",
   "icon": "media/icon.png",
