@@ -220,21 +220,36 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     statusBarManager?.setError('CLI not found');
     vscode.window
       .showWarningMessage(
-        'CodeLayers CLI not found. Install it to analyze blast radius.',
-        'Install via Homebrew',
-        'Install via curl'
+        'CodeLayers CLI not found. Install it to see your blast radius.',
+        'Install Now'
       )
       .then((choice) => {
-        if (choice === 'Install via Homebrew') {
+        if (choice === 'Install Now') {
           const terminal = vscode.window.createTerminal('CodeLayers Install');
           terminal.show();
-          terminal.sendText('brew install codelayers-ai/codelayers/codelayers');
-        } else if (choice === 'Install via curl') {
-          const terminal = vscode.window.createTerminal('CodeLayers Install');
-          terminal.show();
-          terminal.sendText(
-            'curl --proto \'=https\' --tlsv1.2 -LsSf https://github.com/codelayers-ai/codelayers/releases/latest/download/codelayers-cli-installer.sh | sh'
-          );
+          terminal.sendText('curl -fsSL https://codelayers.ai/install.sh | sh');
+
+          // After terminal closes, re-detect CLI and start watch mode
+          const closeListener = vscode.window.onDidCloseTerminal(async (closed) => {
+            if (closed !== terminal) return;
+            closeListener.dispose();
+
+            const detected = await findCliPath();
+            if (detected) {
+              runner = new CliRunner(detected);
+              runner.setStderrHandler((msg) => {
+                outputChannel.appendLine(`[CLI stderr] ${msg}`);
+              });
+              statusBarManager.setWatching();
+              backoffState = initialBackoffState();
+              startWatchMode();
+              vscode.window.showInformationMessage('CodeLayers CLI installed. Blast radius is now active.');
+            } else {
+              vscode.window.showWarningMessage(
+                'CodeLayers CLI not found after install. Try restarting your editor.'
+              );
+            }
+          });
         }
       });
   } else {

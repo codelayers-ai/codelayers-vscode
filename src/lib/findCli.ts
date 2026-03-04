@@ -1,5 +1,15 @@
 import { execFile } from 'child_process';
 import { access, constants } from 'fs/promises';
+import { homedir } from 'os';
+import { join } from 'path';
+
+/** Well-known install locations checked when `which` fails. */
+const FALLBACK_PATHS = [
+  join(homedir(), '.codelayers', 'bin', 'codelayers'),
+  join(homedir(), '.cargo', 'bin', 'codelayers'),
+  '/opt/homebrew/bin/codelayers',   // macOS Apple Silicon (brew)
+  '/usr/local/bin/codelayers',      // macOS Intel / Linux (brew)
+];
 
 /**
  * Find the codelayers CLI binary asynchronously.
@@ -20,7 +30,7 @@ export async function findCliPath(explicitPath?: string): Promise<string | undef
   }
 
   // Auto-detect via `which` (macOS/Linux only — Windows is blocked at activation)
-  return new Promise((resolve) => {
+  const whichResult = await new Promise<string | undefined>((resolve) => {
     execFile('which', ['codelayers'], { encoding: 'utf-8' }, (err, stdout) => {
       if (err || !stdout.trim()) {
         resolve(undefined);
@@ -29,4 +39,18 @@ export async function findCliPath(explicitPath?: string): Promise<string | undef
       }
     });
   });
+
+  if (whichResult) return whichResult;
+
+  // Fallback: check well-known install locations
+  for (const p of FALLBACK_PATHS) {
+    try {
+      await access(p, constants.X_OK);
+      return p;
+    } catch {
+      // Not found at this path — try next
+    }
+  }
+
+  return undefined;
 }

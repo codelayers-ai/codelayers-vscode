@@ -4,7 +4,7 @@ import { findCliPath } from '../lib/findCli';
 describe('findCliPath', () => {
   it('falls back to PATH when explicit path does not exist', async () => {
     const result = await findCliPath('/tmp/nonexistent-binary-12345');
-    // Falls back to `which codelayers` — may find it if installed locally
+    // Falls back to `which codelayers` then fallback paths
     expect(result === undefined || typeof result === 'string').toBe(true);
     // The key test: it does NOT return the nonexistent explicit path
     if (result) {
@@ -12,11 +12,9 @@ describe('findCliPath', () => {
     }
   });
 
-  it('finds a binary on PATH via which', async () => {
-    // `ls` exists on all platforms
+  it('finds a binary on PATH via which or fallback paths', async () => {
     const result = await findCliPath();
-    // We can't guarantee codelayers is on PATH in CI,
-    // but findCliPath should return undefined (not throw) if not found
+    // May find via `which` or fallback paths (brew, cargo, ~/.codelayers/bin)
     expect(result === undefined || typeof result === 'string').toBe(true);
   });
 
@@ -29,7 +27,7 @@ describe('findCliPath', () => {
   it('falls back to PATH lookup when explicit path is not executable', async () => {
     // /dev/null exists but is not executable
     const result = await findCliPath('/dev/null');
-    // Should fall through to `which codelayers` (likely undefined in test env)
+    // Should fall through to `which codelayers` then fallback paths
     expect(result === undefined || typeof result === 'string').toBe(true);
   });
 });

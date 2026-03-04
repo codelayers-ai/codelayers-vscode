@@ -1,12 +1,22 @@
 # CodeLayers — Blast Radius
 
-Know what breaks before you ship.
+You changed one file. 417 files broke.
 
-CodeLayers analyzes your codebase with [tree-sitter](https://tree-sitter.github.io/) and shows you exactly which files are affected by your current changes — functions, imports, type references — traced through the full dependency graph. Every save triggers a real-time re-analysis.
+CodeLayers shows you the blast radius of every code change before you ship. It traces function calls, imports, and type references through your full dependency graph using [tree-sitter](https://tree-sitter.github.io/) — and updates on every save.
+
+![Blast radius sidebar with hop-colored file decorations](media/hero.png)
+
+## Zero setup
+
+The CLI installs automatically when you first open the extension. No manual steps.
+
+Works in **VS Code** and **Cursor**.
 
 ## Features
 
 **Blast Radius sidebar** — Every affected file grouped by hop distance from your change.
+
+![Sidebar tree view](media/sidebar-tree.png)
 
 **Hop-colored decorations** — Files are color-coded by distance in the file explorer and editor gutters:
 - Red — changed file (hop 0)
@@ -14,6 +24,8 @@ CodeLayers analyzes your codebase with [tree-sitter](https://tree-sitter.github.
 - Yellow — 2 hops away
 - Green — 3 hops away
 - Blue — 4+ hops away
+
+![Editor decorations with hop colors](media/editor-decorations.png)
 
 **CodeLens annotations** — Inline caller counts and "trace downstream" links above affected symbols.
 
@@ -23,23 +35,21 @@ CodeLayers analyzes your codebase with [tree-sitter](https://tree-sitter.github.
 
 **10 languages** — Rust, TypeScript/JavaScript, Python, Java, Go, C++, C#, Ruby, PHP, Swift.
 
-## Requirements
-
-CodeLayers requires the `codelayers` CLI for parsing and graph analysis.
-
-```bash
-curl -fsSL https://codelayers.ai/install.sh | bash
-```
-
-The extension will prompt you to install the CLI if it's not found in your PATH.
-
 ## How it works
 
-1. Open any Git repository in VS Code
-2. The extension starts watching automatically
+1. Open any Git repository
+2. The extension starts watching automatically (installs the CLI if needed)
 3. Edit and save a file — the sidebar updates with every file affected by your change
 4. Click any file in the blast radius to open it with its git diff
 5. Use CodeLens links to trace callers upstream or dependents downstream
+
+## CI/CD
+
+Add blast radius to your pull requests with the [CodeLayers GitHub Action](https://github.com/codelayers-ai/codelayers-action). Posts a 3D visualization link as a PR comment automatically.
+
+## Explore any repo
+
+Paste any public GitHub PR or repo URL into [codelayers.ai/explore](https://codelayers.ai/explore) to visualize it in 3D — no account required.
 
 ## Settings
 
@@ -66,8 +76,9 @@ All commands are available via the Command Palette (`Cmd+Shift+P`):
 
 ## Links
 
-- **Website:** [codelayers.ai](https://codelayers.ai/)
-- **iOS App (Apple Vision Pro):** [CodeLayers on the App Store](https://apps.apple.com/app/codelayers/id6756067177)
+- [codelayers.ai](https://codelayers.ai/)
+- [CodeLayers on the App Store](https://apps.apple.com/app/codelayers/id6756067177) (iPhone, iPad, Vision Pro)
+- [GitHub Action](https://github.com/codelayers-ai/codelayers-action)
 
 ## License
 
